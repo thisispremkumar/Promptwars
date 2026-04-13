@@ -1,7 +1,20 @@
 "use client";
 import React, { useState, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
-import { logger } from '../lib/logger';
+
+/**
+ * @description Logs an event securely via the server-side API route to avoid
+ * exposing Google Cloud credentials or Node.js modules on the client bundle.
+ * @param {string} action - The event identifier.
+ * @param {string} message - The human-readable log message.
+ */
+const logEvent = (action, message) => {
+  fetch('/api/log', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, message }),
+  }).catch(() => {}); // Fire-and-forget; failures are non-critical
+};
 
 /**
  * @description Virtual concession ordering module managing async operations and localized queue status.
@@ -21,11 +34,11 @@ const ConcessionOrder = memo(function ConcessionOrder() {
     const newQueueNum = Math.floor(Math.random() * 900) + 100;
     setQueueNumber(newQueueNum);
     
-    logger.info({ action: 'order_placed' }, `User placed order #${newQueueNum}`);
+    logEvent('order_placed', `User placed order #${newQueueNum}`);
 
     setTimeout(() => {
       setOrderState('ready');
-      logger.info({ action: 'order_ready' }, `Order #${newQueueNum} is ready`);
+      logEvent('order_ready', `Order #${newQueueNum} is ready`);
     }, 4000);
   }, []);
 

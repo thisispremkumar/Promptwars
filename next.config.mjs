@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  // Prevent @google-cloud packages from being bundled on the client side
+  serverExternalPackages: ['@google-cloud/logging', 'google-auth-library'],
   async headers() {
     return [
       {
@@ -25,7 +27,7 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'",
-          }
+          },
         ],
       },
     ];

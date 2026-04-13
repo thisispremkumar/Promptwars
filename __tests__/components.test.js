@@ -5,13 +5,8 @@ import LiveUpdates from '../components/LiveUpdates';
 import GoogleMapsMock from '../components/GoogleMapsMock';
 import StadiumMap from '../components/StadiumMap';
 
-// Mock the Logger to avoid credentials error during testing
-jest.mock('../lib/logger', () => ({
-  logger: {
-    info: jest.fn(),
-    error: jest.fn(),
-  }
-}));
+// Mock fetch API for the logEvent fire-and-forget calls
+global.fetch = jest.fn(() => Promise.resolve({ ok: true }));
 
 // Mock Google Maps API Loader
 jest.mock('@react-google-maps/api', () => ({
