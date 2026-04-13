@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 
 const ALL_UPDATES = [
   { id: 1, type: 'info', message: 'Welcome to the Ultimate Championship! Match starts in 15 mins.', time: 'Just now' },
@@ -8,7 +8,7 @@ const ALL_UPDATES = [
   { id: 4, type: 'alert', message: 'Heavy foot traffic at South Exit. Consider using East Exit.', time: '10 mins ago' },
 ];
 
-export default function LiveUpdates() {
+const LiveUpdates = memo(function LiveUpdates() {
   const [updates, setUpdates] = useState([ALL_UPDATES[0]]);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function LiveUpdates() {
       } else {
         clearInterval(interval);
       }
-    }, 5000); // Add a new message every 5 seconds until list is done
+    }, 5000); 
 
     return () => clearInterval(interval);
   }, []);
@@ -32,27 +32,32 @@ export default function LiveUpdates() {
   };
 
   return (
-    <div className="glass-panel" style={{ height: '100%' }}>
-      <div className="flex-between" style={{ marginBottom: '15px' }}>
-        <h2 className="text-gradient" style={{ margin: 0 }}>Event Feed</h2>
-        <span className="badge badge-blue">Real-time</span>
-      </div>
+    <aside aria-labelledby="feed-heading" className="glass-panel" style={{ height: '100%' }}>
+      <header className="flex-between" style={{ marginBottom: '15px' }}>
+        <h2 id="feed-heading" className="text-gradient" style={{ margin: 0 }}>Event Feed</h2>
+        <span aria-label="Real-time Feed Status" className="badge badge-blue">Real-time</span>
+      </header>
       
-      <div className="updates-container">
+      <div 
+        className="updates-container" 
+        role="log" 
+        aria-live="polite" 
+        aria-atomic="false"
+      >
         {updates.map((update) => (
-          <div key={update.id} className="update-item slide-in">
-            <div className="update-header">
+          <article key={update.id} className="update-item slide-in">
+            <header className="update-header">
               <span className={`badge ${getBadgeType(update.type)}`} style={{ fontSize: '0.65rem' }}>
                 {update.type}
               </span>
-              <span className="update-time">{update.time}</span>
-            </div>
+              <time className="update-time" aria-label={`Posted ${update.time}`}>{update.time}</time>
+            </header>
             <p className="update-msg">{update.message}</p>
-          </div>
+          </article>
         ))}
       </div>
-
-
-    </div>
+    </aside>
   );
-}
+});
+
+export default LiveUpdates;

@@ -12,11 +12,11 @@ export default function Home() {
           <p style={{ color: 'var(--text-secondary)' }}>The Smart Event Experience</p>
         </div>
         <div className="flex-center" style={{ gap: '15px' }}>
-          <div className="flex-center" style={{ gap: '8px' }}>
-            <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: 'var(--accent-secondary)' }} className="pulsate"></div>
+          <div className="flex-center" role="status" style={{ gap: '8px' }}>
+            <div aria-hidden="true" style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: 'var(--accent-secondary)' }} className="pulsate"></div>
             <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Live Services Connected</span>
           </div>
-          <div className="glass-panel" style={{ padding: '8px 16px', borderRadius: '20px' }}>
+          <div className="glass-panel" aria-label="Seat Information" style={{ padding: '8px 16px', borderRadius: '20px' }}>
             <span style={{ fontWeight: '600' }}>Seat: </span>
             <span style={{ color: 'var(--accent-primary)' }}>Sec 114, Row F</span>
           </div>
@@ -24,20 +24,18 @@ export default function Home() {
       </header>
 
       <div className="dashboard-grid">
-        <section className="col-span-2">
+        <div className="col-span-2">
           <StadiumMap />
-        </section>
+        </div>
         
-        <section className="side-col">
+        <div className="side-col">
           <LiveUpdates />
-        </section>
+        </div>
 
-        <section className="col-span-3" style={{ marginTop: '20px' }}>
+        <div className="col-span-3" style={{ marginTop: '20px' }}>
           <ConcessionOrder />
-        </section>
+        </div>
       </div>
-
-
     </main>
   );
 }
