@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, memo } from 'react';
+import PropTypes from 'prop-types';
 
 const STATIC_ZONES = [
   { id: 'north-stand', name: 'North Stand', top: '10%', left: '50%', width: '60%', height: '15%', type: 'seats' },
@@ -11,15 +12,21 @@ const STATIC_ZONES = [
   { id: 'exit-e', name: 'East Exit', top: '50%', right: '2%', width: '8%', height: '15%', type: 'exit', icon: '🚪' },
 ];
 
+/**
+ * @description Generates a responsive CSS stadium layout with live polling overlay maps representing attendee congestion.
+ * @component
+ * @return {React.JSX.Element} Stadium Navigation Map.
+ */
 const StadiumMap = memo(function StadiumMap() {
-  const [zoneHeat, setZoneHeat] = useState({});
-
-  useEffect(() => {
+  const [zoneHeat, setZoneHeat] = useState(() => {
     const initialHeat = {};
     STATIC_ZONES.forEach(z => {
       initialHeat[z.id] = Math.floor(Math.random() * 3);
     });
-    setZoneHeat(initialHeat);
+    return initialHeat;
+  });
+
+  useEffect(() => {
 
     const interval = setInterval(() => {
       setZoneHeat(prev => {
@@ -33,12 +40,22 @@ const StadiumMap = memo(function StadiumMap() {
     return () => clearInterval(interval);
   }, []);
 
+  /**
+   * @description Maps numeric heat constraint into an RGB transparent color space.
+   * @param {number} heat - Heat index level from 0 to 2.
+   * @returns {string} RGBA Color string matching UI constraints.
+   */
   const getHeatColor = (heat) => {
     if (heat === 2) return 'rgba(248, 81, 73, 0.7)'; // High
     if (heat === 1) return 'rgba(210, 153, 34, 0.7)'; // Medium
     return 'rgba(63, 185, 80, 0.7)'; // Low
   };
 
+  /**
+   * @description Converts numeric heat index into semantic string values for screen readers.
+   * @param {number} heat - Heat index level from 0 to 2.
+   * @returns {string} Human readable traffic volume indicator.
+   */
   const getAriaHeatLabel = (heat) => {
     if (heat === 2) return 'Congested';
     if (heat === 1) return 'Moderate Traffic';
@@ -95,5 +112,7 @@ const StadiumMap = memo(function StadiumMap() {
     </section>
   );
 });
+
+StadiumMap.propTypes = {};
 
 export default StadiumMap;

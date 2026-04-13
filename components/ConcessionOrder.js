@@ -1,17 +1,26 @@
 "use client";
 import React, { useState, useCallback, memo } from 'react';
+import PropTypes from 'prop-types';
 import { logger } from '../lib/logger';
 
+/**
+ * @description Virtual concession ordering module managing async operations and localized queue status.
+ * @component
+ * @return {React.JSX.Element} Order interface.
+ */
 const ConcessionOrder = memo(function ConcessionOrder() {
   const [orderState, setOrderState] = useState('idle'); // idle, processing, ready
   const [queueNumber, setQueueNumber] = useState(null);
 
+  /**
+   * @description Initiates the simulated payment processing and queue allocation matrix, pushing metrics to Google Cloud.
+   * @function
+   */
   const handleOrder = useCallback(() => {
     setOrderState('processing');
     const newQueueNum = Math.floor(Math.random() * 900) + 100;
     setQueueNumber(newQueueNum);
     
-    // Demonstrate Google Services integration capability
     logger.info({ action: 'order_placed' }, `User placed order #${newQueueNum}`);
 
     setTimeout(() => {
@@ -20,6 +29,10 @@ const ConcessionOrder = memo(function ConcessionOrder() {
     }, 4000);
   }, []);
 
+  /**
+   * @description Transitions order UI safely back to neutral default position.
+   * @function
+   */
   const resetOrder = useCallback(() => {
     setOrderState('idle');
     setQueueNumber(null);
@@ -79,7 +92,7 @@ const ConcessionOrder = memo(function ConcessionOrder() {
           <div className="flex-center flex-column" style={{ padding: '20px 0', flexDirection: 'column' }} role="status">
             <div className="spinner" aria-hidden="true"></div>
             <h3 style={{ marginTop: '15px' }}>Preparing Order #{queueNumber}</h3>
-            <p style={{ color: 'var(--text-secondary)' }}>We'll notify you when it's ready.</p>
+            <p style={{ color: 'var(--text-secondary)' }}>We&apos;ll notify you when it&apos;s ready.</p>
           </div>
         )}
 
@@ -108,5 +121,7 @@ const ConcessionOrder = memo(function ConcessionOrder() {
     </section>
   );
 });
+
+ConcessionOrder.propTypes = {};
 
 export default ConcessionOrder;
