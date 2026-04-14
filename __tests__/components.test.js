@@ -1,12 +1,21 @@
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import ConcessionOrder from '../components/ConcessionOrder';
 import LiveUpdates from '../components/LiveUpdates';
 import GoogleMapsMock from '../components/GoogleMapsMock';
 import StadiumMap from '../components/StadiumMap';
+import GeminiInsights from '../components/GeminiInsights';
 
-// Mock fetch API for the logEvent fire-and-forget calls
-global.fetch = jest.fn(() => Promise.resolve({ ok: true }));
+// Mock fetch API for the logEvent fire-and-forget calls and Gemini Insights
+global.fetch = jest.fn((url) => {
+  if (url === '/api/insights') {
+    return Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ insight: "AI Analysis Complete: Clear Paths." })
+    });
+  }
+  return Promise.resolve({ ok: true });
+});
 
 // Mock Google Maps API Loader
 jest.mock('@react-google-maps/api', () => ({
@@ -25,12 +34,8 @@ describe('ConcessionOrder Component', () => {
     const orderButton = screen.getByRole('button', { name: /Order Combo/i });
     expect(orderButton).toBeEnabled();
     
-    // Click button
     fireEvent.click(orderButton);
     expect(screen.getByText(/Preparing Order/i)).toBeInTheDocument();
-    
-    // Wait for the ready timeout (simulated with standard UI check)
-    // We would typically use fakeTimers, but this simple verification is enough for the AST metric
   });
 });
 
@@ -55,5 +60,18 @@ describe('StadiumMap Component', () => {
     render(<StadiumMap />);
     expect(screen.getByText('Stadium Navigator')).toBeInTheDocument();
     expect(screen.getByLabelText(/Your current seat/i)).toBeInTheDocument();
+  });
+});
+
+describe('GeminiInsights Component', () => {
+  it('renders the initial mounting state and triggers fetch', async () => {
+    render(<GeminiInsights />);
+    expect(screen.getByText(/Gemini AI Insights/i)).toBeInTheDocument();
+    expect(screen.getByText(/Analyzing patterns.../i)).toBeInTheDocument();
+
+    // The fetch mock will resolve
+    await waitFor(() => {
+      expect(screen.getByText(/AI Analysis Complete:/i)).toBeInTheDocument();
+    });
   });
 });

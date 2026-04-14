@@ -16,6 +16,10 @@ const ConcessionOrder = dynamic(() => import('../components/ConcessionOrder'), {
   loading: () => <div className="glass-panel" style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading Smart Concessions...</div>
 });
 
+const GeminiInsights = dynamic(() => import('../components/GeminiInsights'), {
+  loading: () => <div className="glass-panel" style={{ height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Initializing AI Engine...</div>
+});
+
 const GoogleMapsMock = dynamic(() => import('../components/GoogleMapsMock'), {
   ssr: false
 });
@@ -48,6 +52,7 @@ export default function Home() {
       <div className="dashboard-grid">
         <div className="col-span-2">
           <StadiumMap />
+          <GeminiInsights />
           <GoogleMapsMock />
         </div>
         
