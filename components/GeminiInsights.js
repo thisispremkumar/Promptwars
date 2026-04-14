@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
-import DOMPurify from 'dompurify';
 
 /**
  * @description Renders real-time Generative AI crowd control recommendations based on live map data.
@@ -80,7 +79,7 @@ const GeminiInsights = memo(function GeminiInsights() {
           </div>
         ) : (
           <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: '1.5' }}>
-            {DOMPurify.sanitize(insight)}
+            {insight}
           </p>
         )}
       </div>

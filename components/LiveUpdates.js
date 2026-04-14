@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
-import DOMPurify from 'dompurify';
 
 const ALL_UPDATES = [
   { id: 1, type: 'info', message: 'Welcome to the Ultimate Championship! Match starts in 15 mins.', time: 'Just now' },
@@ -61,11 +60,11 @@ const LiveUpdates = memo(function LiveUpdates() {
           <article key={update.id} className="update-item slide-in">
             <header className="update-header">
               <span className={`badge ${getBadgeType(update.type)}`} style={{ fontSize: '0.65rem' }}>
-                {DOMPurify.sanitize(update.type)}
+                {update.type}
               </span>
-              <time className="update-time" aria-label={`Posted ${update.time}`}>{DOMPurify.sanitize(update.time)}</time>
+              <time className="update-time" aria-label={`Posted ${update.time}`}>{update.time}</time>
             </header>
-            <p className="update-msg">{DOMPurify.sanitize(update.message)}</p>
+            <p className="update-msg">{update.message}</p>
           </article>
         ))}
       </div>
